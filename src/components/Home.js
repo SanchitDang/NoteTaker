@@ -1,19 +1,23 @@
 import React from 'react'
 import Navbar from './Navbar'
-
-import { useState, useEffect } from 'react';
-
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useUserAuth } from "./UserAuthContext";
-
-import { nanoid } from 'nanoid';
 import NotesList from './NotesList';
-import Search from './Search';
 import Header from './Header';
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+
+import { db } from "../firebase-cfg";
 
 
 const Home = () => {
+
   const { logOut, user } = useUserAuth();
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -26,71 +30,35 @@ const Home = () => {
 
   };
 
-  const [notes, setNotes] = useState([
-    {
-      id: nanoid(),
-      text: 'Hola!',
-      date: '10/09/2022',
-    },
+  //db management
+  const usersCollectionRef = collection(db, "users");
 
-  ]);
-
-
-  const [searchText, setSearchText] = useState('');
-
-
-  useEffect(() => {
-    const savedNotes = JSON.parse(
-      localStorage.getItem('react-notes-app-data')
-    );
-
-    if (savedNotes) {
-      setNotes(savedNotes);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(
-      'react-notes-app-data',
-      JSON.stringify(notes)
-    );
-  }, [notes]);
-
-  const addNote = (text) => {
+  //add note to db
+  const addNote = async (text) => {
     const date = new Date();
-    const newNote = {
-      id: nanoid(),
-      text: text,
-      date: date.toLocaleDateString(),
-    };
-    const newNotes = [...notes, newNote];
-    setNotes(newNotes);
+    await addDoc(
+      usersCollectionRef,
+      {name: text, date: date.toLocaleDateString()} );
   };
 
-  const deleteNote = (id) => {
-    const newNotes = notes.filter((note) => note.id !== id);
-    setNotes(newNotes);
+  //delete note from db
+  const deleteNote = async (id) => {
+    const userDoc = doc(db, "users", id);
+    await deleteDoc(userDoc);
   };
 
+  //UI
   return (
     <>
       <Navbar title="Notes Taker" />
 
-      
-        
-          <div className='container mt-4'>
-            <Header/>
-            <Search handleSearchNote={setSearchText} />
-            <NotesList
-              notes={notes.filter((note) =>
-                note.text.toLowerCase().includes(searchText)
-              )}
-              handleAddNote={addNote}
-              handleDeleteNote={deleteNote}
-            />
-          </div>
-        
-      
+      <div className='container mt-4'>
+        <Header />
+        <NotesList
+          handleAddNote={addNote}
+          handleDeleteNote={deleteNote}
+        />
+      </div>
 
       <div className="d-grid gap-3">
         <Button variant="primary" onClick={handleLogout}>
