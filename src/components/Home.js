@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useEffect} from 'react'
 import Navbar from './Navbar'
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
@@ -17,6 +17,7 @@ import { db } from "../firebase-cfg";
 
 
 const Home = () => {
+
 
   const { logOut, user } = useUserAuth();
   const navigate = useNavigate();
