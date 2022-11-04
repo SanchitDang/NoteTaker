@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/NoteTaker/static/css/main.d2b287f0.css",
-    "main.js": "/NoteTaker/static/js/main.b5717e94.js",
+    "main.js": "/NoteTaker/static/js/main.3b33da7c.js",
     "index.html": "/NoteTaker/index.html",
     "main.d2b287f0.css.map": "/NoteTaker/static/css/main.d2b287f0.css.map",
-    "main.b5717e94.js.map": "/NoteTaker/static/js/main.b5717e94.js.map"
+    "main.3b33da7c.js.map": "/NoteTaker/static/js/main.3b33da7c.js.map"
   },
   "entrypoints": [
     "static/css/main.d2b287f0.css",
-    "static/js/main.b5717e94.js"
+    "static/js/main.3b33da7c.js"
   ]
 }
