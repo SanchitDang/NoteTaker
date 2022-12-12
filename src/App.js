@@ -7,7 +7,7 @@ import SignupPage from './components/SignupPage';
 import SigninPage from './components/SigninPage';
 import { UserAuthContextProvider  } from "./components/UserAuthContext";
 import ProtectedRoute from './components/ProtectedRoute';
-import DataBaseOperations from "./components/DataBaseOperations";
+
 
 function App() {
 
@@ -15,7 +15,7 @@ function App() {
   return (
     <>
 
-      <BrowserRouter>
+      <BrowserRouter basename="/NoteTaker">
       <UserAuthContextProvider>
         <Routes>
           <Route path="/" element={<ProtectedRoute> <Home/> </ProtectedRoute>}/>       
@@ -23,7 +23,6 @@ function App() {
           <Route path="/Contact" element={<Contact/>}/>
           <Route path="/SigninPage" element={<SigninPage/>}/>
           <Route path="/SignupPage" element={<SignupPage/>}/>
-          <Route path="/dbo" element={<DataBaseOperations/>}/>
         </Routes>
         </UserAuthContextProvider>
       </BrowserRouter>

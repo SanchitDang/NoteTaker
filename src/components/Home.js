@@ -1,23 +1,22 @@
-import React , {useEffect} from 'react'
+import React , {useEffect, useState} from 'react'
 import Navbar from './Navbar'
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useUserAuth } from "./UserAuthContext";
 import NotesList from './NotesList';
-import Header from './Header';
 import {
   collection,
   addDoc,
   updateDoc,
   deleteDoc,
-  doc,
+  doc,getDocs, setDoc
 } from "firebase/firestore";
 
-import { db } from "../firebase-cfg";
+import { db , auth} from "../firebase-cfg";
 
 
 const Home = () => {
-
+  const [val, setVal] = useState("");
 
   const { logOut, user } = useUserAuth();
   const navigate = useNavigate();
@@ -40,12 +39,17 @@ const Home = () => {
     await addDoc(
       usersCollectionRef,
       {name: text, date: date.toLocaleDateString()} );
+    // await setDoc(
+    //   doc(db, "users", auth.currentUser.uid, "name", "niceID"), {value : text});
+    //   setVal("");
+      window.location.reload(false);
   };
 
   //delete note from db
   const deleteNote = async (id) => {
     const userDoc = doc(db, "users", id);
     await deleteDoc(userDoc);
+    window.location.reload(false);
   };
 
   //UI
@@ -54,7 +58,11 @@ const Home = () => {
       <Navbar title="Notes Taker" />
 
       <div className='container mt-4'>
-        <Header />
+        
+      <div className='header'>
+			<h1>Notes</h1>
+		</div>
+
         <NotesList
           handleAddNote={addNote}
           handleDeleteNote={deleteNote}
