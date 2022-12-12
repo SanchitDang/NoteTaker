@@ -1,19 +1,14 @@
-import React , {useEffect, useState} from 'react'
+import { React, useState } from 'react'
 import Navbar from './Navbar'
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useUserAuth } from "./UserAuthContext";
 import NotesList from './NotesList';
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,getDocs, setDoc
-} from "firebase/firestore";
+import uniqid from 'uniqid';
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { db, auth } from "../firebase-cfg";
 
-import { db , auth} from "../firebase-cfg";
-
+//*DATA FETCHING from NotesLists.js* 
 
 const Home = () => {
   const [val, setVal] = useState("");
@@ -30,19 +25,12 @@ const Home = () => {
 
   };
 
-  //db management
-  const usersCollectionRef = collection(db, "users");
-
   //add note to db
   const addNote = async (text) => {
     const date = new Date();
-    await addDoc(
-      usersCollectionRef,
-      {name: text, date: date.toLocaleDateString()} );
-    // await setDoc(
-    //   doc(db, "users", auth.currentUser.uid, "name", "niceID"), {value : text});
-    //   setVal("");
-      window.location.reload(false);
+    await setDoc(doc(
+      db, "users", auth.currentUser.uid, "messages", uniqid()),
+      { name: text, date: date.toLocaleDateString() });
   };
 
   //delete note from db
@@ -58,18 +46,16 @@ const Home = () => {
       <Navbar title="Notes Taker" />
 
       <div className='container mt-4'>
-        
-      <div className='header'>
-			<h1>Notes</h1>
-		</div>
-
+        <div className='header'>
+          <h1>Notes</h1>
+        </div>
         <NotesList
           handleAddNote={addNote}
           handleDeleteNote={deleteNote}
         />
       </div>
 
-      <div className="d-grid gap-3">
+      <div className="d-grid gap-2">
         <Button variant="primary" onClick={handleLogout}>
           Log out
         </Button>
@@ -78,6 +64,5 @@ const Home = () => {
     </>
   )
 }
-
 
 export default Home;

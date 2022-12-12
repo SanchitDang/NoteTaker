@@ -1,30 +1,29 @@
 import Note from './Note';
 import AddNote from './AddNote';
 import { useState, useEffect } from "react";
-import { db } from "../firebase-cfg";
-import { collection, getDocs } from "firebase/firestore";
+import { db, auth } from "../firebase-cfg";
+import { collection, getDocs, doc } from "firebase/firestore";
 
-const NotesList = ({
-	handleAddNote,
-	handleDeleteNote,
-}) => {
-
+const NotesList = ({ handleAddNote, handleDeleteNote, }) => {
 	const [users, setUsers] = useState([]);
 	const usersCollectionRef = collection(db, "users");
+	
+	//fetching DATA
 	useEffect(() => {
 		const getUsers = async () => {
-			const data = await getDocs(usersCollectionRef);
-			setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+			const dataRef = doc(db, "users", auth.currentUser.uid);
+			const data = await getDocs(collection(dataRef, "messages"));
+			setUsers(data.docs.map((doc) => ({...doc.data(), id : doc.id })));
+		
 		};
 
 		getUsers();
-	}, []);
+	}                 );
+	//before [] above
 
 
 	return (
 		<div className='notes-list'>
-
-
 			{users.map((user) => (
 				<Note
 					id={user.id}
