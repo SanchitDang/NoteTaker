@@ -14,14 +14,12 @@ const NotesList = ({ handleAddNote, handleDeleteNote, }) => {
 			const dataRef = doc(db, "users", auth.currentUser.uid);
 			const data = await getDocs(collection(dataRef, "messages"));
 			setUsers(data.docs.map((doc) => ({...doc.data(), id : doc.id })));
-		
 		};
-
 		getUsers();
 	}                 );
 	//before [] above
 
-
+	//UI
 	return (
 		<div className='notes-list'>
 			{users.map((user) => (
